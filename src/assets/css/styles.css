@@ -43,6 +43,12 @@ header {
     align-items: center;
 }
 
+.rating {
+    align-self: stretch;
+    text-align: left;
+    padding-left: 2rem;
+}
+
 .fullname,
 .state-zip,
 .gift-method {

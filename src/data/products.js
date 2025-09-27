@@ -5,7 +5,8 @@ export const products = [
         location: 'London',
         price: 100,
         image: 'src/assets/images/math.png',
-        space: 5
+        space: 5,
+        rating: 5
     },
     {
         id: 1002,
@@ -13,7 +14,8 @@ export const products = [
         location: 'Oxford',
         price: 100,
         image: 'src/assets/images/math.png',
-        space: 5
+        space: 5,
+        rating: 3
     },
     {
         id: 1003,
@@ -21,7 +23,8 @@ export const products = [
         location: 'London',
         price: 100,
         image: 'src/assets/images/english.png',
-        space: 5
+        space: 5,
+        rating: 4
     },
     {
         id: 1004,
@@ -29,7 +32,8 @@ export const products = [
         location: 'York',
         price: 80,
         image: 'src/assets/images/english.png',
-        space: 5
+        space: 5,
+        rating: 3
     },
     {
         id: 1005,
@@ -37,7 +41,8 @@ export const products = [
         location: 'Bristol',
         price: 90,
         image: 'src/assets/images/music.png',
-        space: 5
+        space: 5,
+        rating: 3
     },
     {
         id: 1006,
@@ -45,7 +50,8 @@ export const products = [
         location: 'Kent',
         price: 80,
         image: 'src/assets/images/music.png',
-        space: 5
+        space: 5,
+        rating: 4
     },
     {
         id: 1007,
@@ -53,7 +59,8 @@ export const products = [
         location: 'Bristol',
         price: 95,
         image: 'src/assets/images/physics.png',
-        space: 5
+        space: 5,
+        rating: 3
     },
     {
         id: 1008,
@@ -61,7 +68,8 @@ export const products = [
         location: 'London',
         price: 100,
         image: 'src/assets/images/physics.png',
-        space: 5
+        space: 5,
+        rating: 5
     },
     {
         id: 1009,
@@ -69,7 +77,8 @@ export const products = [
         location: 'Reading',
         price: 90,
         image: 'src/assets/images/history.png',
-        space: 5
+        space: 5,
+        rating: 2
     },
     {
         id: 1010,
@@ -77,6 +86,7 @@ export const products = [
         location: 'Bristol',
         price: 65,
         image: 'src/assets/images/history.png',
-        space: 5
+        space: 5,
+        rating: 4
     }
 ];
