@@ -75,11 +75,11 @@
                 <div class="fullname">
                     <div class="input">
                         <label for="firstname">First Name:</label>
-                        <input v-model="information.firstname" id="firstname">
+                        <input v-model.trim="information.firstname" id="firstname">
                     </div>
                     <div class="input">
                         <label for="lastname">Last Name:</label>
-                        <input v-model="information.lastname" id="lastname">
+                        <input v-model.trim="information.lastname" id="lastname">
                     </div>
                 </div>
                 <div class="input">
@@ -95,9 +95,9 @@
                         <label for="state">State:</label>
                         <select v-model="information.state" id="state">
                             <option disabled value="">State</option>
-                            <option>AL</option>
-                            <option>AR</option>
-                            <option>CA</option>
+                            <option v-for="state in information.states" :key="state" :value="state">
+                                {{state}}
+                            </option>
                         </select>
                     </div>
                     <div class="input">
@@ -105,9 +105,17 @@
                         <input v-model="information.zip" id="zip">
                     </div>
                 </div>
+                <div class="input">
+                    <label for="phone">Mobile no:</label>
+                    <input v-model.number="information.phone" type="number" id="phone">
+                </div>
                 <div class="gift-method">
                     <div>
-                        <input type="checkbox" value="true" v-model="information.gift" id="gift">
+                        <input type="checkbox" value="true"
+                         v-model="information.gift" id="gift"
+                         v-bind:true-value="information.sendGift"
+                         v-bind:false-value="information.dontSendGift"
+                        >
                         <label for="gift">Ship as Gift?</label>
                     </div>
                     <div>
@@ -126,6 +134,7 @@
                 <p>City: {{information.city}}</p>
                 <p>State: {{information.state}}</p>
                 <p>PostCode: {{information.zip}}</p>
+                <p>Mobile no: {{information.phone}}</p>
                 <p>Gift: {{information.gift}}</p>
                 <p>Method: {{information.method}}</p>
             </div>
