@@ -8,6 +8,16 @@ new Vue({
     showMyCart: false,
     products,
     cart: [],
+    information: {
+      firstname: '',
+      lastname: '',
+      address: '',
+      city: '',
+      state: '',
+      zip: '',
+      gift: false,
+      method: 'Home'
+    },
     space: 5
  },
  computed: {
@@ -38,6 +48,9 @@ new Vue({
     },
     removeFromCart(product) {
       this.cart = this.cart.filter(p => p.id !== product.id);
+    },
+    order() {
+      alert('Order Placed')
     }
   }
 });

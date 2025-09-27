@@ -49,9 +49,8 @@
                 </button>
             </div>
         </div>
-        <div v-else>
-            <div class="grid" v-if="showMyCart">
-                <div class="container" v-for="product in cart" :key="product.id">
+        <div class="grid" v-else-if="showMyCart">
+            <div class="container" v-for="product in cart" :key="product.id">
                 <main class="main">
                     <figure>
                         <!-- bind 'src' attr to 'product.image' in 'data' -->
@@ -68,12 +67,76 @@
                     Delete from Cart
                 </button>
             </div>
-            </div>
-            <div v-else>
-                 <!-- Checkout page -->
-            </div>
-            
         </div>
+        <div v-else>
+            <!-- Checkout page -->
+            <h2>Your Information</h2>
+            <div class="container" style="margin: 0.5rem; padding: 1.75rem;">
+                <div class="fullname">
+                    <div class="input">
+                        <label for="firstname">First Name:</label>
+                        <input v-model="information.firstname" id="firstname">
+                    </div>
+                    <div class="input">
+                        <label for="lastname">Last Name:</label>
+                        <input v-model="information.lastname" id="lastname">
+                    </div>
+                </div>
+                <div class="input">
+                    <label for="address">Address:</label>
+                    <input v-model="information.address" id="address">
+                </div>
+                <div class="input">
+                    <label for="city">City:</label>
+                    <input v-model="information.city" id="city">
+                </div>
+                <div class="state-zip">
+                    <div class="input">
+                        <label for="state">State:</label>
+                        <select v-model="information.state" id="state">
+                            <option disabled value="">State</option>
+                            <option>AL</option>
+                            <option>AR</option>
+                            <option>CA</option>
+                        </select>
+                    </div>
+                    <div class="input">
+                        <label for="zip">Zip / Postal Code:</label>
+                        <input v-model="information.zip" id="zip">
+                    </div>
+                </div>
+                <div class="gift-method">
+                    <div>
+                        <input type="checkbox" value="true" v-model="information.gift" id="gift">
+                        <label for="gift">Ship as Gift?</label>
+                    </div>
+                    <div>
+                        <input type="radio" v-model="information.method" id="home" value="Home">
+                        <label for="home">Home</label>
+                        <input type="radio" v-model="information.method" id="business" value="Business">
+                        <label for="business">Business</label>
+                    </div>
+                </div>    
+            </div>
+            <div>
+                <h2>Entered Information</h2>
+                <p>First Name: {{information.firstname}}</p>
+                <p>Last Name: {{information.lastname}}</p>
+                <p>Address: {{information.address}}</p>
+                <p>City: {{information.city}}</p>
+                <p>State: {{information.state}}</p>
+                <p>PostCode: {{information.zip}}</p>
+                <p>Gift: {{information.gift}}</p>
+                <p>Method: {{information.method}}</p>
+            </div>
+            <button type="button" class="btn" v-on:click="order">Place Order</button>
+        </div>
+
+
+
+             
+
+        
     </div>
 
     <script src="./src/main.js" type="module"></script>

@@ -32,12 +32,36 @@ header {
     margin: 0 2px;
 }
 
-.main {
+.main,
+.fullname,
+.state-zip,
+.gift-method {
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
     text-align: left;
     align-items: center;
+}
+
+.fullname,
+.state-zip,
+.gift-method {
+    width: 100%;
+    flex-direction: row;
+    gap: 3rem;
+}
+
+.input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.input label {
+    text-align: left;
+    font-weight: bold;
 }
 
 .buttons {
