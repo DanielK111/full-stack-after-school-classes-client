@@ -41,8 +41,8 @@
                         <p>Price: {{product.price}}</p>
                     </div>
                 </main>
-                <button type="button" class="btn" v-on:click="addToCart(product)" v-if="canAddToCart">
-                    Add To Cart
+                <button type="button" class="btn" v-on:click="addToCart(product)" v-if="canAddToCart(product)">
+                    <span v-if="getQuantity(product.id) > 0">{{ getQuantity(product.id) }}</span> Add To Cart
                 </button>
                 <button type="button" class="btn" disabled="disabled" v-else>
                     Add To Cart
@@ -59,6 +59,7 @@
                     <div>
                         <p><span>Subject: </span><span v-text="product.subject"></span></p>
                         <p><span>Location: </span><span v-text="product.location"></span></p>
+                        <p><span>Quantity: </span>{{product.quantity}}</p>
                         <!-- The double curly brackets is used instead of 'v-text' -->
                         <p>Price: {{product.price}}</p>
                     </div>

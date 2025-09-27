@@ -1,4 +1,5 @@
 import { products } from "./data/products.js";
+import { states } from "./data/states.js";
 
 new Vue({
   el: '#app',
@@ -14,82 +15,45 @@ new Vue({
       address: '',
       city: '',
       state: '',
-      states: [
-        'Alaska',
-        'Alabama',
-        'Arkansas',
-        'Arizona',
-        'California',
-        'Colorado',
-        'Connecticut',
-        'District of Columbia',
-        'Delaware',
-        'Florida',
-        'Georgia',
-        'Hawaii',
-        'Iowa',
-        'Idaho',
-        'Illinois',
-        'Indiana',
-        'Kansas',
-        'Kentucky',
-        'Louisiana',
-        'Massachusetts',
-        'Maryland',
-        'Maine',
-        'Michigan',
-        'Minnesota',
-        'Missouri',
-        'Mississippi',
-        'Montana',
-        'North Carolina',
-        'North Dakota',
-        'Nebraska',
-        'New Hampshire',
-        'New Jersey',
-        'New Mexico',
-        'Nevada',
-        'New York',
-        'Ohio',
-        'Oklahoma',
-        'Oregon',
-        'Pennsylvania',
-        'Puerto Rico',
-        'Rhode Island',
-        'South Carolina',
-        'South Dakota',
-        'Tennessee',
-        'Texas',
-        'Utah',
-        'Virginia',
-        'Vermont',
-        'Washington',
-        'Wisconsin',
-        'West Virginia',
-        'Wyoming'
-      ],
+      states: states,
       zip: '',
       phone: '',
       gift: 'Do not send as gift',
       sendGift: 'Send as a gift',
       dontSendGift: 'Do not send as a gift',
       method: 'Home'
-    },
-    space: 5
+    }
  },
  computed: {
   cartItemsCount() {
     return this.cart.length || "";
-  },
-  canAddToCart() {
-    return this.space > this.cartItemsCount;
   }
  },
   methods: {
+    cartProductCount(product) {
+      const cartProduct = this.cart.find(p => p.id === product.id);
+      if (cartProduct)
+        return cartProduct.quantity
+      return 0;
+    },
+    canAddToCart(product) {
+      return product.space > this.cartProductCount(product);
+    },
+    getQuantity(productId) {
+        const item = this.cart.find(p => p.id === productId);
+        return item ? item.quantity : 0;
+    },
     addToCart(product) {
       const cartProductIndex = this.cart.findIndex(p => p.id === product.id);
-      if (cartProductIndex < 0)
-        this.cart.push(product);
+      let itemCount = 1;
+      const items = [ ...this.cart ];
+
+      if (cartProductIndex < 0) {
+        this.cart.push({ ...product, quantity: itemCount });
+      } else {
+        itemCount = items[cartProductIndex].quantity + itemCount;
+        this.cart[cartProductIndex].quantity = itemCount;
+      }
     },
     showCart() {
       this.showMyCart = this.showMyCart ? false : true;
@@ -104,7 +68,12 @@ new Vue({
       this.showLessons = this.showLessons ? false : true;
     },
     removeFromCart(product) {
-      this.cart = this.cart.filter(p => p.id !== product.id);
+      const cartProduct = this.cart.find(p => p.id === product.id);
+      if (cartProduct.quantity > 1) {
+        cartProduct.quantity -= 1;
+      } else {
+        this.cart = this.cart.filter(p => p.id !== product.id);
+      }
     },
     order() {
       alert('Order Placed')
