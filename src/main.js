@@ -39,9 +39,8 @@ new Vue({
     canAddToCart(product) {
       return product.space > this.cartProductCount(product);
     },
-    getQuantity(productId) {
-        const item = this.cart.find(p => p.id === productId);
-        return item ? item.quantity : 0;
+    leftProduct(product) {
+      return product.space - this.cartProductCount(product);
     },
     addToCart(product) {
       const cartProductIndex = this.cart.findIndex(p => p.id === product.id);

@@ -42,11 +42,14 @@
                     </div>
                 </main>
                 <button type="button" class="btn" v-on:click="addToCart(product)" v-if="canAddToCart(product)">
-                    <span v-if="getQuantity(product.id) > 0">{{ getQuantity(product.id) }}</span> Add To Cart
+                    <span v-if="cartProductCount(product) > 0">{{ cartProductCount(product) }}</span> Add To Cart
                 </button>
                 <button type="button" class="btn" disabled="disabled" v-else>
                     Add To Cart
                 </button>
+                <span v-if="leftProduct(product) === 0">All out!</span>
+                <span v-else-if="leftProduct(product) <= 2">Only {{ leftProduct(product) }} left!</span>
+                <span v-else>Buy now!</span>
             </div>
         </div>
         <div class="grid" v-else-if="showMyCart">
