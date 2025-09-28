@@ -8,6 +8,8 @@ new Vue({
     showLessons: true,
     products,
     cart: [],
+    totalQuantity: 0,
+    myOrder: [],
     sortBy: '',
     sortVal: '',
     sortOptions: [
@@ -50,7 +52,7 @@ new Vue({
     return this.products.sort(compare);
   },
   cartItemsCount() {
-    return this.cart.length || "";
+    return this.totalQuantity || "";
   }
  },
   methods: {
@@ -77,6 +79,7 @@ new Vue({
         itemCount = items[cartProductIndex].quantity + itemCount;
         this.cart[cartProductIndex].quantity = itemCount;
       }
+      this.totalQuantity += 1;
     },
     showCart() {
       this.showLessons = this.showLessons ? false : true;
@@ -92,9 +95,19 @@ new Vue({
         this.showLessons = true;
         this.showMyCart = false;
       }
+      this.totalQuantity -= 1;
+      if (this.totalQuantity < 0)
+        this.totalQuantity = 0
     },
     order() {
-      alert('Order Placed')
+      this.myOrder.push({ ...this.cart });
+      this.cart = [];
+      this.totalQuantity = 0;
+      this.showLessons = true;
+      alert('Order Placed');
+      for(const p of this.myOrder)
+        console.log(p);
+      console.log(this.myOrder.length);
     }
   }
 });
