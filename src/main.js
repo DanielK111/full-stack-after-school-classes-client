@@ -88,7 +88,7 @@ new Vue({
       } else {
         this.cart = this.cart.filter(p => p.id !== product.id);
       }
-      if (this.cartItemsCount === "") {
+      if (this.cartItemsCount < 1) {
         this.showLessons = true;
         this.showMyCart = false;
       }
