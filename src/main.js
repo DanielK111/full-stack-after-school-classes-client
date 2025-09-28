@@ -9,6 +9,14 @@ new Vue({
     showMyCart: false,
     products,
     cart: [],
+    sortBy: '',
+    sortVal: '',
+    sortOptions: [
+      'Subject',
+      'Location',
+      'Price',
+      'Space'
+    ],
     information: {
       firstname: '',
       lastname: '',
@@ -25,6 +33,23 @@ new Vue({
     }
  },
  computed: {
+  sortedLessons() {
+    const compare = (a, b) => {
+      if (this.sortBy !== '') {
+        const sortKey = this.sortBy.toLowerCase();
+        if (this.sortVal === 'ASC') {
+          if (a[sortKey] > b[sortKey]) return 1;
+          if (a[sortKey] < b[sortKey]) return -1;
+        } else if (this.sortVal === 'DEC') {
+          if (a[sortKey] > b[sortKey]) return -1;
+          if (a[sortKey] < b[sortKey]) return 1;
+        }
+      }
+      return 0;
+    }
+
+    return this.products.sort(compare);
+  },
   cartItemsCount() {
     return this.cart.length || "";
   }

@@ -31,36 +31,51 @@
                 </button>
             </div>
         </header>
-        <div class="grid" v-if="showLessons">
-            <div class="container" v-for="product in products" :key="product.id">
-                <main class="main">
-                    <figure>
-                        <!-- bind 'src' attr to 'product.image' in 'data' -->
-                        <img v-bind:src="product.image" width="60">
-                    </figure>
-                    <div>
-                        <p><span>Subject: </span><span v-text="product.subject"></span></p>
-                        <p><span>Location: </span><span v-text="product.location"></span></p>
-                        <!-- The double curly brackets is used instead of 'v-text' -->
-                        <p>Price: {{product.price}}</p>
+        <div v-if="showLessons">
+            <div>
+                <select v-model="sortBy">
+                    <option disabled value="">Sort By</option>
+                    <option v-for="sortOption in sortOptions">
+                        {{sortOption}}
+                    </option>
+                </select>
+                <select v-model="sortVal">
+                    <option disabled value="">Coose an option</option>
+                    <option value="ASC">Ascending</option>
+                    <option value="DEC">Descending</option>
+                </select>
+            </div>
+            <div class="grid">
+                <div class="container" v-for="product in sortedLessons" :key="product.id">
+                    <main class="main">
+                        <figure>
+                            <!-- bind 'src' attr to 'product.image' in 'data' -->
+                            <img v-bind:src="product.image" width="60">
+                        </figure>
+                        <div>
+                            <p><span>Subject: </span><span v-text="product.subject"></span></p>
+                            <p><span>Location: </span><span v-text="product.location"></span></p>
+                            <!-- The double curly brackets is used instead of 'v-text' -->
+                            <p>Price: {{product.price}}</p>
+                        </div>
+                    </main>
+                    <div class="buttons">
+                        <button type="button" class="btn" v-on:click="addToCart(product)" v-if="canAddToCart(product)">
+                            <span v-if="cartProductCount(product) > 0">{{ cartProductCount(product) }}</span> Add To Cart
+                        </button>
+                        <button type="button" class="btn" disabled="disabled" v-else>
+                            Add To Cart
+                        </button>
+                        <div style="margin: auto; width: 8rem;">
+                            <span v-if="leftProduct(product) === 0">All out!</span>
+                            <span v-else-if="leftProduct(product) <= 2">Only {{ leftProduct(product) }} left!</span>
+                            <span v-else>Buy now!</span>
+                        </div>
                     </div>
-                </main>
-                <div class="buttons">
-                    <button type="button" class="btn" v-on:click="addToCart(product)" v-if="canAddToCart(product)">
-                        <span v-if="cartProductCount(product) > 0">{{ cartProductCount(product) }}</span> Add To Cart
-                    </button>
-                    <button type="button" class="btn" disabled="disabled" v-else>
-                        Add To Cart
-                    </button>
-                    <div style="margin: auto; width: 8rem;">
-                        <span v-if="leftProduct(product) === 0">All out!</span>
-                        <span v-else-if="leftProduct(product) <= 2">Only {{ leftProduct(product) }} left!</span>
-                        <span v-else>Buy now!</span>
+                    <div class="rating">
+                        <span v-for="n in product.rating"><i class="fa-solid fa-star" style="color: #ffbb00;"></i></span>
+                        <span v-for="n in 5 - product.rating"><i class="fa-regular fa-star"></i></span>
                     </div>
-                </div>
-                <div class="rating">
-                    <span v-for="n in product.rating"><i class="fa-solid fa-star" style="color: #ffbb00;"></i></span>
-                    <span v-for="n in 5 - product.rating"><i class="fa-regular fa-star"></i></span>
                 </div>
             </div>
         </div>
