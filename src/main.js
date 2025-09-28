@@ -6,7 +6,6 @@ new Vue({
   data: { 
     sitename: 'After School Classes',
     showLessons: true,
-    showMyCart: false,
     products,
     cart: [],
     sortBy: '',
@@ -80,15 +79,6 @@ new Vue({
       }
     },
     showCart() {
-      this.showMyCart = this.showMyCart ? false : true;
-      if (!this.showMyCart) {
-        this.showLessons = true;
-      } else {
-        this.showLessons = false;
-      }
-    },
-    showCheckout() {
-      this.showMyCart = false;
       this.showLessons = this.showLessons ? false : true;
     },
     removeFromCart(product) {
@@ -97,6 +87,10 @@ new Vue({
         cartProduct.quantity -= 1;
       } else {
         this.cart = this.cart.filter(p => p.id !== product.id);
+      }
+      if (this.cartItemsCount === "") {
+        this.showLessons = true;
+        this.showMyCart = false;
       }
     },
     order() {

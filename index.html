@@ -16,10 +16,13 @@
         <header>
             <h1>{{ sitename }}</h1>
             <div class="buttons">
-                <button class="btn checkout" v-on:click="showCart" v-show="cartItemsCount > 0">
+                <button class="btn checkout" v-on:click="showCart" v-if="cartItemsCount > 0">
                     Cart
                 </button>
-                <button class="btn checkout" v-on:click="showCheckout">
+                <button class="btn checkout" disabled="disabled" v-else>
+                    Cart
+                </button>
+                <button class="btn checkout" v-on:click="order" v-show="!showLessons">
                         {{ cartItemsCount }}
                         <span style="width: 15px; height: 15px;"><svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -27,7 +30,7 @@
                             fill='currentColor'
                         >
                             <path d='M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z' />
-                        </svg></span> Checkout
+                        </svg></span> Pay now!
                 </button>
             </div>
         </header>
@@ -44,6 +47,9 @@
                     <option value="ASC">Ascending</option>
                     <option value="DEC">Descending</option>
                 </select>
+                <center>
+                    <span><h2>Lessons</h2></span>
+                </center>
             </div>
             <div class="grid">
                 <div class="container" v-for="product in sortedLessons" :key="product.id">
@@ -78,29 +84,35 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="grid" v-else-if="showMyCart">
-            <div class="container" v-for="product in cart" :key="product.id">
-                <main class="main">
-                    <figure>
-                        <!-- bind 'src' attr to 'product.image' in 'data' -->
-                        <img v-bind:src="product.image" width="60">
-                    </figure>
-                    <div>
-                        <p><span>Subject: </span><span v-text="product.subject"></span></p>
-                        <p><span>Location: </span><span v-text="product.location"></span></p>
-                        <p><span>Quantity: </span>{{product.quantity}}</p>
-                        <!-- The double curly brackets is used instead of 'v-text' -->
-                        <p>Price: {{product.price}}</p>
-                    </div>
-                </main>
-                <button type="button" class="btn remove" v-on:click="removeFromCart(product)">
-                    Delete from Cart
-                </button>
-            </div>
-        </div>
+        </div> <!-- End of v-if="showLessons" -->
         <div v-else>
+            <center>
+                <span><h2>Cart</h2></span>
+            </center>
+            <div class="grid">
+                <div class="container" v-for="product in cart" :key="product.id">
+                    <main class="main">
+                        <figure>
+                            <!-- bind 'src' attr to 'product.image' in 'data' -->
+                            <img v-bind:src="product.image" width="60">
+                        </figure>
+                        <div>
+                            <p><span>Subject: </span><span v-text="product.subject"></span></p>
+                            <p><span>Location: </span><span v-text="product.location"></span></p>
+                            <p><span>Quantity: </span>{{product.quantity}}</p>
+                            <!-- The double curly brackets is used instead of 'v-text' -->
+                            <p>Price: {{product.price}}</p>
+                        </div>
+                    </main>
+                    <button type="button" class="btn remove" v-on:click="removeFromCart(product)">
+                        Delete from Cart
+                    </button>
+                </div>
+            </div>
             <!-- Checkout page -->
+                <center>
+                <span><h2>Checkout</h2></span>
+            </center>
             <h2>Your Information</h2>
             <div class="container" style="margin: 0.5rem; padding: 1.75rem;">
                 <div class="fullname">
@@ -143,9 +155,9 @@
                 <div class="gift-method">
                     <div>
                         <input type="checkbox" value="true"
-                         v-model="information.gift" id="gift"
-                         v-bind:true-value="information.sendGift"
-                         v-bind:false-value="information.dontSendGift"
+                            v-model="information.gift" id="gift"
+                            v-bind:true-value="information.sendGift"
+                            v-bind:false-value="information.dontSendGift"
                         >
                         <label for="gift">Ship as Gift?</label>
                     </div>
@@ -156,8 +168,8 @@
                         <label for="business">Business</label>
                     </div>
                 </div>    
-            </div>
-            <div>
+            </div> <!-- End of class="container" -->
+            <div style="padding: 0.75rem;">
                 <h2>Entered Information</h2>
                 <p>First Name: {{information.firstname}}</p>
                 <p>Last Name: {{information.lastname}}</p>
@@ -169,15 +181,8 @@
                 <p>Gift: {{information.gift}}</p>
                 <p>Method: {{information.method}}</p>
             </div>
-            <button type="button" class="btn" v-on:click="order">Place Order</button>
-        </div>
-
-
-
-             
-
-        
-    </div>
+        </div> <!-- End of v-else -->
+    </div> <!-- End of id="app" -->
 
     <script src="./src/main.js" type="module"></script>
 </body>
