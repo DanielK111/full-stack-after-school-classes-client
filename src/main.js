@@ -16,15 +16,15 @@ function validate() {
   
   let phone = document.getElementById('phone');
 
-  const regExName =/^[a-zA-Z]$/;
-  const regExPhone = /^[0-9]$/;
+  const regExName =/^[a-zA-Z]+$/;
+  const regExPhone = /^[0-9]+$/;
   if(firstname && lastname && phone) {
     firstname = firstname.value;
     lastname = lastname.value;
     phone = phone.value;
   }
-  const regTestFirstname = regExName.test(firstname);
-  const regTestLastname = regExName.test(lastname);
+  const regTestFirstname = regExName.test(firstname.trim());
+  const regTestLastname = regExName.test(lastname.trim());
   const regTestPhone = regExPhone.test(phone);
   if (regTestFirstname && regTestLastname && regTestPhone) {
     return true;
