@@ -22,7 +22,7 @@
                 <button class="btn checkout" disabled="disabled" v-else>
                     Cart
                 </button>
-                <button class="btn checkout" v-on:click="order" v-show="!showLessons">
+                <button class="btn checkout" v-on:click="order" v-show="!showLessons" id="checkoutBtn">
                         {{ cartItemsCount }}
                         <span style="width: 15px; height: 15px;"><svg
                             xmlns='http://www.w3.org/2000/svg'

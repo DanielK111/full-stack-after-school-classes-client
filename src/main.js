@@ -1,7 +1,38 @@
 import { products } from "./data/products.js";
 import { states } from "./data/states.js";
 
-new Vue({
+
+document.addEventListener('DOMContentLoaded', () => {
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  
+  setInterval(() => {
+    checkoutBtn.disabled = !validate();
+  }, 100);
+});
+
+function validate() {
+  let firstname = document.getElementById('firstname');
+  let lastname = document.getElementById('lastname');
+  
+  let phone = document.getElementById('phone');
+
+  const regExName =/^[a-zA-Z]$/;
+  const regExPhone = /^[0-9]$/;
+  if(firstname && lastname && phone) {
+    firstname = firstname.value;
+    lastname = lastname.value;
+    phone = phone.value;
+  }
+  const regTestFirstname = regExName.test(firstname);
+  const regTestLastname = regExName.test(lastname);
+  const regTestPhone = regExPhone.test(phone);
+  if (regTestFirstname && regTestLastname && regTestPhone) {
+    return true;
+  }
+  return false;
+}
+
+const webStore = new Vue({
   el: '#app',
   data: { 
     sitename: 'After School Classes',
