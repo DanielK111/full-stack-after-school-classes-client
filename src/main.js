@@ -1,7 +1,3 @@
-import { products } from "./data/products.js";
-import { states } from "./data/states.js";
-
-
 document.addEventListener('DOMContentLoaded', () => {
   const checkoutBtn = document.getElementById('checkoutBtn');
   
@@ -34,10 +30,10 @@ function validate() {
 
 const webStore = new Vue({
   el: '#app',
-  data: { 
+  data: {
     sitename: 'After School Classes',
     showLessons: true,
-    products,
+    products: [],
     cart: [],
     totalQuantity: 0,
     myOrder: [],
@@ -55,7 +51,7 @@ const webStore = new Vue({
       address: '',
       city: '',
       state: '',
-      states: states,
+      states: [],
       zip: '',
       phone: '',
       gift: 'Do not send as gift',
@@ -63,6 +59,22 @@ const webStore = new Vue({
       dontSendGift: 'Do not send as a gift',
       method: 'Home'
     }
+ },
+ created: function() {
+  fetch('http://localhost:8080/api/lessons')
+  .then(
+    function(response) {
+      response.json()
+      .then(
+        function(data) {
+          webStore.products = data.lessons;
+          webStore.information.states = data.states;
+          webStore.cart = data.cart;
+          webStore.totalQuantity = data.totalQuantity;
+          webStore.myOrder = data.myOrder;
+        }
+      )
+    })
  },
  computed: {
   sortedLessons() {
@@ -100,45 +112,57 @@ const webStore = new Vue({
       return product.space - this.cartProductCount(product);
     },
     addToCart(product) {
-      const cartProductIndex = this.cart.findIndex(p => p.id === product.id);
-      let itemCount = 1;
-      const items = [ ...this.cart ];
-
-      if (cartProductIndex < 0) {
-        this.cart.push({ ...product, quantity: itemCount });
-      } else {
-        itemCount = items[cartProductIndex].quantity + itemCount;
-        this.cart[cartProductIndex].quantity = itemCount;
-      }
-      this.totalQuantity += 1;
+      const cartProductIndex = this.cart.findIndex(l => l.id === product.id);
+      let method = cartProductIndex >= 0 ? 'PUT': 'POST';
+      let payload = cartProductIndex >= 0 ? { lessonId: product.id } : { lesson: product }
+      let url = cartProductIndex >= 0 ? 'http://localhost:8080/api/lessons/' + product.id : 'http://localhost:8080/api/lessons';
+      
+      fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.totalQuantity = data.totalQuantity;
+        this.cart = data.cart;
+      })
     },
     showCart() {
       this.showLessons = this.showLessons ? false : true;
     },
     removeFromCart(product) {
-      const cartProduct = this.cart.find(p => p.id === product.id);
-      if (cartProduct.quantity > 1) {
-        cartProduct.quantity -= 1;
-      } else {
-        this.cart = this.cart.filter(p => p.id !== product.id);
-      }
-      if (this.cartItemsCount < 1) {
-        this.showLessons = true;
-        this.showMyCart = false;
-      }
-      this.totalQuantity -= 1;
-      if (this.totalQuantity < 0)
-        this.totalQuantity = 0
+      fetch('http://localhost:8080/api/lessons/' + product.id, {
+        method: 'Delete',
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.totalQuantity = data.totalQuantity;
+        this.cart = data.cart;
+        if (this.cartItemsCount < 1) {
+          this.showLessons = true;
+          this.showMyCart = false;
+        }
+      })
     },
     order() {
-      this.myOrder.push({ ...this.cart });
-      this.cart = [];
-      this.totalQuantity = 0;
-      this.showLessons = true;
-      alert('Order Placed');
-      for(const p of this.myOrder)
-        console.log(p);
-      console.log(this.myOrder.length);
+      fetch('http://localhost:8080/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cart: { ...this.cart } })
+      })
+      .then(response => response.json())
+      .then(result => {
+        this.showLessons = true;
+        this.cart = result.cart;
+        this.myOrder = result.myOrder;
+        this.totalQuantity = result.totalQuantity;
+        alert(result.msg);
+      })
     }
   }
 });

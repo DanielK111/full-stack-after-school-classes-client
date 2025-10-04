@@ -56,7 +56,7 @@
                     <main class="main">
                         <figure>
                             <!-- bind 'src' attr to 'product.image' in 'data' -->
-                            <img v-bind:src="product.image" width="60">
+                            <img v-bind:src="'http://localhost:8080/' + product.image" width="60">
                         </figure>
                         <div>
                             <p><span>Subject: </span><span v-text="product.subject"></span></p>
@@ -94,7 +94,7 @@
                     <main class="main">
                         <figure>
                             <!-- bind 'src' attr to 'product.image' in 'data' -->
-                            <img v-bind:src="product.image" width="60">
+                            <img v-bind:src="'http://localhost:8080/' + product.image" width="60">
                         </figure>
                         <div>
                             <p><span>Subject: </span><span v-text="product.subject"></span></p>
