@@ -14,18 +14,22 @@ function validate() {
 
   const regExName =/^[a-zA-Z]+$/;
   const regExPhone = /^[0-9]+$/;
+ 
+  let result = false;
+
   if(firstname && lastname && phone) {
     firstname = firstname.value;
     lastname = lastname.value;
     phone = phone.value;
+
+    const regTestFirstname = regExName.test(firstname.trim());
+    const regTestLastname = regExName.test(lastname.trim());
+    const regTestPhone = regExPhone.test(phone);
+    if (regTestFirstname && regTestLastname && regTestPhone) {
+      result = true;
+    }
   }
-  const regTestFirstname = regExName.test(firstname.trim());
-  const regTestLastname = regExName.test(lastname.trim());
-  const regTestPhone = regExPhone.test(phone);
-  if (regTestFirstname && regTestLastname && regTestPhone) {
-    return true;
-  }
-  return false;
+  return result;
 }
 
 const webStore = new Vue({
@@ -96,6 +100,12 @@ const webStore = new Vue({
   },
   cartItemsCount() {
     return this.totalQuantity || "";
+  },
+  fullname: function() {
+    return [
+      this.information.firstname,
+      this.information.lastname
+    ].join(' ');
   }
  },
   methods: {
@@ -148,15 +158,27 @@ const webStore = new Vue({
       })
     },
     order() {
+      const payload = {
+        fullname: this.fullname,
+        address: this.information.address,
+        city: this.information.city,
+        state: this.information.state,
+        zip: this.information.zip,
+        phone: this.information.phone,
+        gift: this.information.gift,
+        method: this.information.method,
+        cart: { ...this.cart }
+      }
       fetch('http://localhost:8080/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ cart: { ...this.cart } })
+        body: JSON.stringify(payload)
       })
       .then(response => response.json())
       .then(result => {
+        console.log('Order response:', result);
         this.showLessons = true;
         this.cart = result.cart;
         this.myOrder = result.myOrder;
