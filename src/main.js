@@ -159,15 +159,17 @@ const webStore = new Vue({
     },
     order() {
       const payload = {
-        fullname: this.fullname,
-        address: this.information.address,
-        city: this.information.city,
-        state: this.information.state,
-        zip: this.information.zip,
-        phone: this.information.phone,
-        gift: this.information.gift,
-        method: this.information.method,
-        cart: { ...this.cart }
+        customer: {
+          fullname: this.fullname,
+          address: this.information.address,
+          city: this.information.city,
+          state: this.information.state,
+          zip: this.information.zip,
+          phone: this.information.phone,
+          gift: this.information.gift,
+          method: this.information.method
+        },
+        order: { ...this.cart }
       }
       fetch('http://localhost:8080/api/orders', {
         method: 'POST',
