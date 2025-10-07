@@ -65,20 +65,7 @@ const webStore = new Vue({
     }
  },
  created: function() {
-  fetch('http://localhost:8080/api/lessons')
-  .then(
-    function(response) {
-      response.json()
-      .then(
-        function(data) {
-          webStore.products = data.lessons;
-          webStore.information.states = data.states;
-          webStore.cart = data.cart;
-          webStore.totalQuantity = data.totalQuantity;
-          webStore.myOrder = data.myOrder;
-        }
-      )
-    })
+  this.loadLessons();
  },
  computed: {
   sortedLessons() {
@@ -109,6 +96,23 @@ const webStore = new Vue({
   }
  },
   methods: {
+    loadLessons() {
+      fetch('http://localhost:8080/api/lessons')
+      .then(
+        function(response) {
+          response.json()
+          .then(
+            function(data) {
+              webStore.products = data.lessons;
+              webStore.information.states = data.states;
+              webStore.cart = data.cart;
+              webStore.totalQuantity = data.totalQuantity;
+              webStore.myOrder = data.myOrder;
+            }
+          )
+        }
+      )
+    },
     cartProductCount(product) {
       const cartProduct = this.cart.find(p => p.id === product.id);
       if (cartProduct)
@@ -125,7 +129,7 @@ const webStore = new Vue({
       const cartProductIndex = this.cart.findIndex(l => l.id === product.id);
       let method = cartProductIndex >= 0 ? 'PUT': 'POST';
       let payload = cartProductIndex >= 0 ? { lessonId: product.id } : { lesson: product }
-      let url = cartProductIndex >= 0 ? 'http://localhost:8080/api/lessons/' + product.id : 'http://localhost:8080/api/lessons';
+      let url = cartProductIndex >= 0 ? 'http://localhost:8080/api/lessons/update-cart/' + product.id : 'http://localhost:8080/api/lessons/add-to-cart';
       
       fetch(url, {
         method: method,
@@ -158,6 +162,7 @@ const webStore = new Vue({
       })
     },
     order() {
+      const cartBeforeOrder = this.cart;
       const payload = {
         customer: {
           fullname: this.fullname,
@@ -169,8 +174,9 @@ const webStore = new Vue({
           gift: this.information.gift,
           method: this.information.method
         },
-        order: { ...this.cart }
+        order: cartBeforeOrder
       }
+
       fetch('http://localhost:8080/api/orders', {
         method: 'POST',
         headers: {
@@ -180,13 +186,29 @@ const webStore = new Vue({
       })
       .then(response => response.json())
       .then(result => {
-        console.log('Order response:', result);
         this.showLessons = true;
         this.cart = result.cart;
         this.myOrder = result.myOrder;
         this.totalQuantity = result.totalQuantity;
         alert(result.msg);
       })
+
+
+      for(let cartLesson of cartBeforeOrder) {
+        fetch('http://localhost:8080/api/lessons/' + cartLesson.id, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(cartLesson)
+        })
+        .then(response => response.json())
+        .then(result => {
+          console.log(result.msg);
+          this.loadLessons();
+        })
+        
+      }
     }
   }
 });
