@@ -114,7 +114,7 @@ const webStore = new Vue({
       )
     },
     cartProductCount(product) {
-      const cartProduct = this.cart.find(p => p.id === product.id);
+      const cartProduct = this.cart.find(p => p._id === product._id);
       if (cartProduct)
         return cartProduct.quantity
       return 0;
@@ -126,10 +126,10 @@ const webStore = new Vue({
       return product.space - this.cartProductCount(product);
     },
     addToCart(product) {
-      const cartProductIndex = this.cart.findIndex(l => l.id === product.id);
+      const cartProductIndex = this.cart.findIndex(l => l._id === product._id);
       let method = cartProductIndex >= 0 ? 'PUT': 'POST';
-      let payload = cartProductIndex >= 0 ? { lessonId: product.id } : { lesson: product }
-      let url = cartProductIndex >= 0 ? 'http://localhost:8080/api/lessons/update-cart/' + product.id : 'http://localhost:8080/api/lessons/add-to-cart';
+      let payload = cartProductIndex >= 0 ? { lessonId: product._id } : { lesson: product }
+      let url = cartProductIndex >= 0 ? 'http://localhost:8080/api/lessons/update-cart/' + product._id : 'http://localhost:8080/api/lessons/add-to-cart';
       
       fetch(url, {
         method: method,
@@ -148,7 +148,7 @@ const webStore = new Vue({
       this.showLessons = this.showLessons ? false : true;
     },
     removeFromCart(product) {
-      fetch('http://localhost:8080/api/lessons/' + product.id, {
+      fetch('http://localhost:8080/api/lessons/' + product._id, {
         method: 'Delete',
       })
       .then(response => response.json())
@@ -195,7 +195,7 @@ const webStore = new Vue({
 
 
       for(let cartLesson of cartBeforeOrder) {
-        fetch('http://localhost:8080/api/lessons/' + cartLesson.id, {
+        fetch('http://localhost:8080/api/lessons/' + cartLesson._id, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
