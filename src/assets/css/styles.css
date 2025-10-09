@@ -49,6 +49,14 @@ header {
     padding-left: 2rem;
 }
 
+.price {
+    color: rebeccapurple;
+    background-color: rgb(216, 216, 216);
+    padding: 1.5rem;
+    border-radius: 6px;
+    text-align: center;
+}
+
 .fullname,
 .state-zip,
 .gift-method {

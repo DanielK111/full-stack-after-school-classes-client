@@ -40,6 +40,7 @@ const webStore = new Vue({
     products: [],
     cart: [],
     totalQuantity: 0,
+    totalPrice: onabort,
     myOrder: [],
     sortBy: '',
     sortVal: '',
@@ -119,6 +120,7 @@ const webStore = new Vue({
               webStore.cart = data.cart;
               webStore.totalQuantity = data.totalQuantity;
               webStore.myOrder = data.myOrder;
+              webStore.totalPrice = data.totalPrice;
             }
           )
         }
@@ -152,6 +154,7 @@ const webStore = new Vue({
       .then(response => response.json())
       .then(data => {
         this.totalQuantity = data.totalQuantity;
+        this.totalPrice = data.totalPrice;
         this.cart = data.cart;
       })
     },
@@ -165,6 +168,7 @@ const webStore = new Vue({
       .then(response => response.json())
       .then(data => {
         this.totalQuantity = data.totalQuantity;
+        this.totalPrice = data.totalPrice;
         this.cart = data.cart;
         if (this.cartItemsCount < 1) {
           this.showLessons = true;
@@ -201,6 +205,7 @@ const webStore = new Vue({
         this.cart = result.cart;
         this.myOrder = result.myOrder;
         this.totalQuantity = result.totalQuantity;
+        this.totalPrice = result.totalPrice;
         alert(result.msg);
       })
 
