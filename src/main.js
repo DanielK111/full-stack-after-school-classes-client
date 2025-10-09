@@ -40,7 +40,7 @@ const webStore = new Vue({
     products: [],
     cart: [],
     totalQuantity: 0,
-    totalPrice: onabort,
+    totalPrice: 0,
     myOrder: [],
     sortBy: '',
     sortVal: '',
