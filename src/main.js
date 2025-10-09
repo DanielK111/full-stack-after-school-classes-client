@@ -49,6 +49,8 @@ const webStore = new Vue({
       'Price',
       'Space'
     ],
+    search: '',
+    debounceTimer: null,
     information: {
       firstname: '',
       lastname: '',
@@ -63,41 +65,50 @@ const webStore = new Vue({
       dontSendGift: 'Do not send as a gift',
       method: 'Home'
     }
- },
- created: function() {
-  this.loadLessons();
- },
- computed: {
-  sortedLessons() {
-    const compare = (a, b) => {
-      if (this.sortBy !== '') {
-        const sortKey = this.sortBy.toLowerCase();
-        if (this.sortVal === 'ASC') {
-          if (a[sortKey] > b[sortKey]) return 1;
-          if (a[sortKey] < b[sortKey]) return -1;
-        } else if (this.sortVal === 'DEC') {
-          if (a[sortKey] > b[sortKey]) return -1;
-          if (a[sortKey] < b[sortKey]) return 1;
+  },
+  created: function() {
+    this.loadLessons();
+  },
+  computed: {
+    sortedLessons() {
+      const compare = (a, b) => {
+        if (this.sortBy !== '') {
+          const sortKey = this.sortBy.toLowerCase();
+          if (this.sortVal === 'ASC') {
+            if (a[sortKey] > b[sortKey]) return 1;
+            if (a[sortKey] < b[sortKey]) return -1;
+          } else if (this.sortVal === 'DEC') {
+            if (a[sortKey] > b[sortKey]) return -1;
+            if (a[sortKey] < b[sortKey]) return 1;
+          }
         }
+        return 0;
       }
-      return 0;
-    }
 
-    return this.products.sort(compare);
+      return this.products.sort(compare);
+    },
+    cartItemsCount() {
+      return this.totalQuantity || "";
+    },
+    fullname: function() {
+      return [
+        this.information.firstname,
+        this.information.lastname
+      ].join(' ');
+    },
   },
-  cartItemsCount() {
-    return this.totalQuantity || "";
+  watch: {
+    search(newVal) {
+      clearTimeout(this.debounceTimer);
+
+      this.debounceTimer = setTimeout(() => {
+        this.loadLessons();
+      }, 300);
+    }
   },
-  fullname: function() {
-    return [
-      this.information.firstname,
-      this.information.lastname
-    ].join(' ');
-  }
- },
   methods: {
     loadLessons() {
-      fetch('http://localhost:8080/api/lessons')
+      fetch('http://localhost:8080/api/lessons?search=' + this.search)
       .then(
         function(response) {
           response.json()

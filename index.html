@@ -47,10 +47,14 @@
                     <option value="ASC">Ascending</option>
                     <option value="DEC">Descending</option>
                 </select>
-                <center>
-                    <span><h2>Lessons</h2></span>
-                </center>
+                <div style="text-align: center;">
+                    <label for="search">Search: </label>
+                    <input v-model.trim="search" id="search" placeholder="Search lessons...">
+                </div>
             </div>
+            <center>
+                <span><h2>Lessons</h2></span>
+            </center>
             <div class="grid">
                 <div class="container" v-for="product in sortedLessons" :key="product.id">
                     <main class="main">
