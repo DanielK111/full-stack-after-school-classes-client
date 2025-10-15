@@ -55,6 +55,7 @@ const webStore = new Vue({
     information: {
       firstname: '',
       lastname: '',
+      email: '',
       address: '',
       city: '',
       state: '',
@@ -181,6 +182,7 @@ const webStore = new Vue({
       const payload = {
         customer: {
           fullname: this.fullname,
+          email: this.information.email,
           address: this.information.address,
           city: this.information.city,
           state: this.information.state,

@@ -131,6 +131,10 @@
                     </div>
                 </div>
                 <div class="input">
+                    <label for="email">Email Address:</label>
+                    <input v-model.trim="information.email" id="email">
+                </div>
+                <div class="input">
                     <label for="address">Address:</label>
                     <input v-model="information.address" id="address">
                 </div>
@@ -177,6 +181,7 @@
             <div style="padding: 0.75rem;">
                 <h2>Entered Information</h2>
                 <p>Full Name: {{fullname}}</p>
+                <p>Email Address: {{information.email}}</p>
                 <p>Address: {{information.address}}</p>
                 <p>City: {{information.city}}</p>
                 <p>State: {{information.state}}</p>
