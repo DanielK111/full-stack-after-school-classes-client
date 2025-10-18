@@ -37,6 +37,8 @@ const webStore = new Vue({
   data: {
     sitename: 'After School Classes',
     showLessons: true,
+    showLogin: false,
+    showSignup: false,
     products: [],
     cart: [],
     totalQuantity: 0,
@@ -161,6 +163,8 @@ const webStore = new Vue({
     },
     showCart() {
       this.showLessons = this.showLessons ? false : true;
+      this.showLogin = false;
+      this.showSignup = false;
     },
     removeFromCart(product) {
       fetch('http://localhost:8080/api/lessons/' + product._id, {
@@ -173,9 +177,26 @@ const webStore = new Vue({
         this.cart = data.cart;
         if (this.cartItemsCount < 1) {
           this.showLessons = true;
-          this.showMyCart = false;
         }
       })
+    },
+    isLogin() {
+      this.showLogin = this.showLogin ? false : true;
+      if(!this.showLogin) {
+        this.showLessons = true;
+      } else {
+        this.showLessons = false;
+      }
+      this.showSignup = false;
+    },
+    isSignup() {
+      this.showSignup = this.showSignup ? false : true;
+      if(!this.showSignup) {
+        this.showLessons = true;
+      } else {
+        this.showLessons = false;
+      }
+      this.showLogin = false;
     },
     order() {
       const cartBeforeOrder = this.cart;
