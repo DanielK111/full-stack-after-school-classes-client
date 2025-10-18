@@ -22,7 +22,7 @@
                 <button class="btn checkout" disabled="disabled" v-else>
                     Cart
                 </button>
-                <button class="btn checkout" v-on:click="order" v-show="!showLessons" id="checkoutBtn">
+                <button class="btn checkout" v-on:click="order" v-show="!showLessons && !showLogin && !showSignup" id="checkoutBtn">
                         {{ cartItemsCount }}
                         <span style="width: 15px; height: 15px;"><svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -99,107 +99,182 @@
             </div>
         </div> <!-- End of v-if="showLessons" -->
         <div v-else>
-            <center>
-                <span><h2>Cart</h2></span>
-            </center>
-            <div class="grid">
-                <div class="container" v-for="product in cart" :key="product.id">
-                    <main class="main">
-                        <figure>
-                            <!-- bind 'src' attr to 'product.image' in 'data' -->
-                            <img v-bind:src="'http://localhost:8080/' + product.image" width="60">
-                        </figure>
-                        <div>
-                            <p><span>Subject: </span><span v-text="product.subject"></span></p>
-                            <p><span>Location: </span><span v-text="product.location"></span></p>
-                            <p><span>Quantity: </span>{{product.quantity}}</p>
-                            <!-- The double curly brackets is used instead of 'v-text' -->
-                            <p>Price: {{product.price}}</p>
-                        </div>
-                    </main>
-                    <button type="button" class="btn remove" v-on:click="removeFromCart(product)">
-                        Delete from Cart
+            <div v-if="showLogin">
+                <div class="container" style="margin: 0.5rem; padding: 1.75rem;">
+                    <div class="input">
+                        <label for="email">Email Address:</label>
+                        <input v-model.trim="information.email" id="email">
+                    </div>
+                    <div class="input">
+                        <label for="pass">Password:</label>
+                        <input v-model="information.password" type="password" id="pass">
+                    </div>
+                    <button class="btn checkout" v-on:click="login">
+                        Log In
                     </button>
                 </div>
-            </div>
-            <p class="price"><strong><span>Total Price: </span>£ {{ totalPrice }}</strong></p>
-            <!-- Checkout page -->
-            <center>
-                <span><h2>Checkout</h2></span>
-            </center>
-            <h2>Your Information</h2>
-            <div class="container" style="margin: 0.5rem; padding: 1.75rem;">
-                <div class="fullname">
-                    <div class="input">
-                        <label for="firstname">First Name:</label>
-                        <input v-model.trim="information.firstname" id="firstname">
+            </div> <!-- End of v-if="showLogin" -->
+            <div v-else>
+                <div v-if="showSignup">
+                    <div class="container" style="margin: 0.5rem; padding: 1.75rem;">
+                        <div class="fullname">
+                            <div class="input">
+                                <label for="firstname">First Name:</label>
+                                <input v-model.trim="information.firstname" id="firstname">
+                            </div>
+                            <div class="input">
+                                <label for="lastname">Last Name:</label>
+                                <input v-model.trim="information.lastname" id="lastname">
+                            </div>
+                        </div>
+                        <div class="input">
+                            <label for="email">Email Address:</label>
+                            <input v-model.trim="information.email" id="email">
+                        </div>
+                        <div class="input">
+                            <label for="address">Address:</label>
+                            <input v-model="information.address" id="address">
+                        </div>
+                        <div class="input">
+                            <label for="city">City:</label>
+                            <input v-model="information.city" id="city">
+                        </div>
+                        <div class="state-zip">
+                            <div class="input">
+                                <label for="state">State:</label>
+                                <select v-model="information.state" id="state">
+                                    <option disabled value="">State</option>
+                                    <option v-for="state in information.states" :key="state" :value="state">
+                                        {{state}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="input">
+                                <label for="zip">Zip / Postal Code:</label>
+                                <input v-model="information.zip" id="zip">
+                            </div>
+                        </div>
+                        <div class="input">
+                            <label for="phone">Mobile no:</label>
+                            <input v-model.number="information.phone" type="number" id="phone">
+                        </div>
+                        <div class="input">
+                            <label for="pass">Password:</label>
+                            <input v-model="information.password" type="password" id="pass">
+                        </div>
+                        <div class="input">
+                            <label for="cPass">Confirm Password:</label>
+                            <input v-model="information.confirmPassword" type="password" id="cPass">
+                        </div>
+                        <button class="btn checkout" v-on:click="signup">
+                            Sign Up
+                        </button>
                     </div>
-                    <div class="input">
-                        <label for="lastname">Last Name:</label>
-                        <input v-model.trim="information.lastname" id="lastname">
+                </div> <!-- End of v-if="showSignup" -->
+                <div v-else>
+                    <center>
+                        <span><h2>Cart</h2></span>
+                    </center>
+                    <div class="grid">
+                        <div class="container" v-for="product in cart" :key="product.id">
+                            <main class="main">
+                                <figure>
+                                    <!-- bind 'src' attr to 'product.image' in 'data' -->
+                                    <img v-bind:src="'http://localhost:8080/' + product.image" width="60">
+                                </figure>
+                                <div>
+                                    <p><span>Subject: </span><span v-text="product.subject"></span></p>
+                                    <p><span>Location: </span><span v-text="product.location"></span></p>
+                                    <p><span>Quantity: </span>{{product.quantity}}</p>
+                                    <!-- The double curly brackets is used instead of 'v-text' -->
+                                    <p>Price: {{product.price}}</p>
+                                </div>
+                            </main>
+                            <button type="button" class="btn remove" v-on:click="removeFromCart(product)">
+                                Delete from Cart
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="input">
-                    <label for="email">Email Address:</label>
-                    <input v-model.trim="information.email" id="email">
-                </div>
-                <div class="input">
-                    <label for="address">Address:</label>
-                    <input v-model="information.address" id="address">
-                </div>
-                <div class="input">
-                    <label for="city">City:</label>
-                    <input v-model="information.city" id="city">
-                </div>
-                <div class="state-zip">
-                    <div class="input">
-                        <label for="state">State:</label>
-                        <select v-model="information.state" id="state">
-                            <option disabled value="">State</option>
-                            <option v-for="state in information.states" :key="state" :value="state">
-                                {{state}}
-                            </option>
-                        </select>
+                    <p class="price"><strong><span>Total Price: </span>£ {{ totalPrice }}</strong></p>
+                    <!-- Checkout page -->
+                    <center>
+                        <span><h2>Checkout</h2></span>
+                    </center>
+                    <h2>Your Information</h2>
+                    <div class="container" style="margin: 0.5rem; padding: 1.75rem;">
+                        <div class="fullname">
+                            <div class="input">
+                                <label for="firstname">First Name:</label>
+                                <input v-model.trim="information.firstname" id="firstname">
+                            </div>
+                            <div class="input">
+                                <label for="lastname">Last Name:</label>
+                                <input v-model.trim="information.lastname" id="lastname">
+                            </div>
+                        </div>
+                        <div class="input">
+                            <label for="email">Email Address:</label>
+                            <input v-model.trim="information.email" id="email">
+                        </div>
+                        <div class="input">
+                            <label for="address">Address:</label>
+                            <input v-model="information.address" id="address">
+                        </div>
+                        <div class="input">
+                            <label for="city">City:</label>
+                            <input v-model="information.city" id="city">
+                        </div>
+                        <div class="state-zip">
+                            <div class="input">
+                                <label for="state">State:</label>
+                                <select v-model="information.state" id="state">
+                                    <option disabled value="">State</option>
+                                    <option v-for="state in information.states" :key="state" :value="state">
+                                        {{state}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="input">
+                                <label for="zip">Zip / Postal Code:</label>
+                                <input v-model="information.zip" id="zip">
+                            </div>
+                        </div>
+                        <div class="input">
+                            <label for="phone">Mobile no:</label>
+                            <input v-model.number="information.phone" type="number" id="phone">
+                        </div>
+                        <div class="gift-method">
+                            <div>
+                                <input type="checkbox" value="true"
+                                    v-model="information.gift" id="gift"
+                                    v-bind:true-value="information.sendGift"
+                                    v-bind:false-value="information.dontSendGift"
+                                >
+                                <label for="gift">Ship as Gift?</label>
+                            </div>
+                            <div>
+                                <input type="radio" v-model="information.method" id="home" value="Home">
+                                <label for="home">Home</label>
+                                <input type="radio" v-model="information.method" id="business" value="Business">
+                                <label for="business">Business</label>
+                            </div>
+                        </div>    
+                    </div> <!-- End of class="container" -->
+                    <div style="padding: 0.75rem;">
+                        <h2>Entered Information</h2>
+                        <p>Full Name: {{fullname}}</p>
+                        <p>Email Address: {{information.email}}</p>
+                        <p>Address: {{information.address}}</p>
+                        <p>City: {{information.city}}</p>
+                        <p>State: {{information.state}}</p>
+                        <p>PostCode: {{information.zip}}</p>
+                        <p>Mobile no: {{information.phone}}</p>
+                        <p>Gift: {{information.gift}}</p>
+                        <p>Method: {{information.method}}</p>
                     </div>
-                    <div class="input">
-                        <label for="zip">Zip / Postal Code:</label>
-                        <input v-model="information.zip" id="zip">
-                    </div>
-                </div>
-                <div class="input">
-                    <label for="phone">Mobile no:</label>
-                    <input v-model.number="information.phone" type="number" id="phone">
-                </div>
-                <div class="gift-method">
-                    <div>
-                        <input type="checkbox" value="true"
-                            v-model="information.gift" id="gift"
-                            v-bind:true-value="information.sendGift"
-                            v-bind:false-value="information.dontSendGift"
-                        >
-                        <label for="gift">Ship as Gift?</label>
-                    </div>
-                    <div>
-                        <input type="radio" v-model="information.method" id="home" value="Home">
-                        <label for="home">Home</label>
-                        <input type="radio" v-model="information.method" id="business" value="Business">
-                        <label for="business">Business</label>
-                    </div>
-                </div>    
-            </div> <!-- End of class="container" -->
-            <div style="padding: 0.75rem;">
-                <h2>Entered Information</h2>
-                <p>Full Name: {{fullname}}</p>
-                <p>Email Address: {{information.email}}</p>
-                <p>Address: {{information.address}}</p>
-                <p>City: {{information.city}}</p>
-                <p>State: {{information.state}}</p>
-                <p>PostCode: {{information.zip}}</p>
-                <p>Mobile no: {{information.phone}}</p>
-                <p>Gift: {{information.gift}}</p>
-                <p>Method: {{information.method}}</p>
-            </div>
-        </div> <!-- End of v-else -->
+                </div> <!-- End of tthird v-else(v-if="showSignup")  -->
+            </div> <!-- End of second v-else(v-if="showLogin")  -->
+        </div> <!-- End of first v-else(v-if="showLessons") -->
     </div> <!-- End of id="app" -->
 
     <script src="./src/main.js" type="module"></script>

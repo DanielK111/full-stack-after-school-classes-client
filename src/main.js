@@ -58,6 +58,8 @@ const webStore = new Vue({
       firstname: '',
       lastname: '',
       email: '',
+      password: '',
+      confirmPassword: '',
       address: '',
       city: '',
       state: '',
@@ -198,6 +200,80 @@ const webStore = new Vue({
       }
       this.showLogin = false;
     },
+    login() {
+      const payload = {
+        email: this.information.email,
+        password: this.information.password
+      };
+
+      fetch('http://localhost:8080/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(result => {
+        this.showLessons = true;
+        localStorage.setItem('token', result.token);
+        this.information.firstname = result.fullname.split(' ')[0];
+        this.information.lastname = result.fullname.split(' ')[1];
+        this.information.email = result.email;
+        this.information.address = result.address;
+        this.information.city = result.city;
+        this.information.zip = result.zip;
+        this.information.phone = result.phone;
+        this.information.password = result.password;
+        alert(result.msg);
+      })
+    },
+    signup() {
+      const payload = {
+        fullname: this.fullname,
+        email: this.information.email,
+        password: this.information.password,
+        address: this.information.address,
+        city: this.information.city,
+        state: this.information.state,
+        zip: this.information.zip,
+        phone: this.information.phone
+    };
+
+    fetch('http://localhost:8080/users/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(result => {
+      this.showLessons = true;
+      this.information.firstname = '';
+      this.information.lastname = '';
+      this.information.email = '';
+      this.information.address = '';
+      this.information.city = '';
+      this.information.zip = '';
+      this.information.phone = '';
+      this.information.password = '';
+      this.information.confirmPassword = '';
+      alert(result.msg);
+    })
+    },
+    logout() {
+      localStorage.removeItem('token');
+      this.information.firstname = '';
+      this.information.lastname = '';
+      this.information.email = '';
+      this.information.address = '';
+      this.information.city = '';
+      this.information.zip = '';
+      this.information.phone = '';
+      this.information.password = '';
+      this.information.confirmPassword = '';
+    },
     order() {
       const cartBeforeOrder = this.cart;
       const payload = {
@@ -218,7 +294,8 @@ const webStore = new Vue({
       fetch('http://localhost:8080/api/orders', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
         },
         body: JSON.stringify(payload)
       })
@@ -237,7 +314,8 @@ const webStore = new Vue({
         fetch('http://localhost:8080/api/lessons/' + cartLesson._id, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
           },
           body: JSON.stringify(cartLesson)
         })
