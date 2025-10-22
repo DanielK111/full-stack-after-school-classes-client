@@ -4,28 +4,33 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(() => {
     checkoutBtn.disabled = !validate();
   }, 100);
+  
 });
 
 function validate() {
   let firstname = document.getElementById('firstname');
   let lastname = document.getElementById('lastname');
-  
   let phone = document.getElementById('phone');
+  let email = document.getElementById('email');
 
-  const regExName =/^[a-zA-Z]+$/;
-  const regExPhone = /^[0-9]+$/;
+  const regExName = /^[a-zA-Z]{4,}$/;
+  const regExPhone = /^[0-9]{10}$/;
+  const regExEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  
   let result = false;
 
-  if(firstname && lastname && phone) {
+  if(firstname && lastname && phone && email) {
     firstname = firstname.value;
     lastname = lastname.value;
     phone = phone.value;
+    email = email.value;
 
     const regTestFirstname = regExName.test(firstname.trim());
     const regTestLastname = regExName.test(lastname.trim());
     const regTestPhone = regExPhone.test(phone);
-    if (regTestFirstname && regTestLastname && regTestPhone) {
+    const regTestEmail = regExEmail.test(email);
+
+    if (regTestFirstname && regTestLastname && regTestPhone && regTestEmail) {
       result = true;
     }
   }
@@ -39,6 +44,7 @@ const webStore = new Vue({
     showLessons: true,
     showLogin: false,
     showSignup: false,
+    isLoggedin: !!localStorage.getItem('token'),
     products: [],
     cart: [],
     totalQuantity: 0,
@@ -76,6 +82,22 @@ const webStore = new Vue({
     this.loadLessons();
   },
   computed: {
+    isSignupBtnValid() {
+      const regExName = /^[a-zA-Z]{4,}$/;
+      const regExPhone = /^[0-9]{10}$/;
+      const regExEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const regExPassword = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/;
+
+      const { firstname, lastname, phone, email, password } = this.information;
+
+      return (
+        regExName.test(firstname?.trim() || '') &&
+        regExName.test(lastname?.trim() || '') &&
+        regExPhone.test(phone?.toString() || '') &&
+        regExEmail.test(email?.trim() || '') &&
+        regExPassword.test(password || '')
+      );
+    },
     sortedLessons() {
       const compare = (a, b) => {
         if (this.sortBy !== '') {
@@ -101,7 +123,7 @@ const webStore = new Vue({
         this.information.firstname,
         this.information.lastname
       ].join(' ');
-    },
+    }
   },
   watch: {
     search(newVal) {
@@ -114,18 +136,33 @@ const webStore = new Vue({
   },
   methods: {
     loadLessons() {
-      fetch('http://localhost:8080/api/lessons?search=' + this.search)
+      fetch('http://localhost:8080/api/lessons?search=' + this.search, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      })
       .then(
         function(response) {
           response.json()
           .then(
             function(data) {
+              // console.log(data)
               webStore.products = data.lessons;
               webStore.information.states = data.states;
               webStore.cart = data.cart;
               webStore.totalQuantity = data.totalQuantity;
               webStore.myOrder = data.myOrder;
               webStore.totalPrice = data.totalPrice;
+              if (data.user.length > 0) {
+                webStore.information.firstname = data.user[0].fullname.split(' ')[0];
+                webStore.information.lastname = data.user[0].fullname.split(' ')[1];
+                webStore.information.email = data.user[0].email;
+                webStore.information.address = data.user[0].address;
+                webStore.information.city = data.user[0].city;
+                webStore.information.zip = data.user[0].zip;
+                webStore.information.phone = data.user[0].phone;
+                webStore.information.password = data.user[0].password;
+              }
             }
           )
         }
@@ -215,8 +252,14 @@ const webStore = new Vue({
       })
       .then(response => response.json())
       .then(result => {
-        this.showLessons = true;
+        console.log(result)
         localStorage.setItem('token', result.token);
+        this.showLessons = true;
+        if (result.token) {
+          this.isLoggedin = true;
+        } else {
+          this.isLoggedin = false;
+        }
         this.information.firstname = result.fullname.split(' ')[0];
         this.information.lastname = result.fullname.split(' ')[1];
         this.information.email = result.email;
@@ -233,6 +276,7 @@ const webStore = new Vue({
         fullname: this.fullname,
         email: this.information.email,
         password: this.information.password,
+        confirmPassword: this.information.confirmPassword,
         address: this.information.address,
         city: this.information.city,
         state: this.information.state,
@@ -264,6 +308,7 @@ const webStore = new Vue({
     },
     logout() {
       localStorage.removeItem('token');
+      this.isLoggedin = false;
       this.information.firstname = '';
       this.information.lastname = '';
       this.information.email = '';
