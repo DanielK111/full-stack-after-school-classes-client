@@ -253,10 +253,11 @@ const webStore = new Vue({
       .then(response => response.json())
       .then(result => {
         console.log(result)
-        localStorage.setItem('token', result.token);
+        alert(result.msg);
         if (result.token) {
           this.isLoggedin = true;
           this.showLessons = true;
+          localStorage.setItem('token', result.token);
         } else {
           this.isLoggedin = false;
         }
@@ -268,7 +269,6 @@ const webStore = new Vue({
         this.information.zip = result.zip;
         this.information.phone = result.phone;
         this.information.password = result.password;
-        alert(result.msg);
       })
     },
     signup() {
