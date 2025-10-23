@@ -254,9 +254,9 @@ const webStore = new Vue({
       .then(result => {
         console.log(result)
         localStorage.setItem('token', result.token);
-        this.showLessons = true;
         if (result.token) {
           this.isLoggedin = true;
+          this.showLessons = true;
         } else {
           this.isLoggedin = false;
         }
@@ -282,29 +282,31 @@ const webStore = new Vue({
         state: this.information.state,
         zip: this.information.zip,
         phone: this.information.phone
-    };
+      };
 
-    fetch('http://localhost:8080/users/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    })
-    .then(response => response.json())
-    .then(result => {
-      this.showLessons = true;
-      this.information.firstname = '';
-      this.information.lastname = '';
-      this.information.email = '';
-      this.information.address = '';
-      this.information.city = '';
-      this.information.zip = '';
-      this.information.phone = '';
-      this.information.password = '';
-      this.information.confirmPassword = '';
-      alert(result.msg);
-    })
+      fetch('http://localhost:8080/users/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(result => {
+        alert(result.msg);
+        if (!result.error) {
+          this.showLessons = true;
+          this.information.firstname = '';
+          this.information.lastname = '';
+          this.information.email = '';
+          this.information.address = '';
+          this.information.city = '';
+          this.information.zip = '';
+          this.information.phone = '';
+          this.information.password = '';
+          this.information.confirmPassword = '';
+        }
+      })
     },
     logout() {
       localStorage.removeItem('token');
