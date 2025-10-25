@@ -258,17 +258,17 @@ const webStore = new Vue({
           this.isLoggedin = true;
           this.showLessons = true;
           localStorage.setItem('token', result.token);
+          this.information.firstname = result.fullname.split(' ')[0];
+          this.information.lastname = result.fullname.split(' ')[1];
+          this.information.email = result.email;
+          this.information.address = result.address;
+          this.information.city = result.city;
+          this.information.zip = result.zip;
+          this.information.phone = result.phone;
+          this.information.password = result.password;
         } else {
           this.isLoggedin = false;
         }
-        this.information.firstname = result.fullname.split(' ')[0];
-        this.information.lastname = result.fullname.split(' ')[1];
-        this.information.email = result.email;
-        this.information.address = result.address;
-        this.information.city = result.city;
-        this.information.zip = result.zip;
-        this.information.phone = result.phone;
-        this.information.password = result.password;
       })
     },
     signup() {
@@ -311,6 +311,7 @@ const webStore = new Vue({
     logout() {
       localStorage.removeItem('token');
       this.isLoggedin = false;
+      console.log('User logs out.');
       this.information.firstname = '';
       this.information.lastname = '';
       this.information.email = '';
