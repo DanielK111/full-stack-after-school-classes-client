@@ -195,6 +195,7 @@ const webStore = new Vue({
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         this.totalQuantity = data.totalQuantity;
         this.totalPrice = data.totalPrice;
         this.cart = data.cart;
@@ -207,7 +208,7 @@ const webStore = new Vue({
     },
     removeFromCart(product) {
       fetch('https://full-stack-after-school-classes-server.onrender.com/api/lessons/' + product._id, {
-        method: 'Delete',
+        method: 'DELETE',
       })
       .then(response => response.json())
       .then(data => {
