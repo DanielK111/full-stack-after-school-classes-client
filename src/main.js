@@ -136,7 +136,7 @@ const webStore = new Vue({
   },
   methods: {
     loadLessons() {
-      fetch('http://localhost:8080/api/lessons?search=' + this.search, {
+      fetch('https://full-stack-after-school-classes-server.onrender.com/api/lessons?search=' + this.search, {
         headers: {
           'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
@@ -184,7 +184,7 @@ const webStore = new Vue({
       const cartProductIndex = this.cart.findIndex(l => l._id === product._id);
       let method = cartProductIndex >= 0 ? 'PUT': 'POST';
       let payload = cartProductIndex >= 0 ? { lessonId: product._id } : { lesson: product }
-      let url = cartProductIndex >= 0 ? 'http://localhost:8080/api/lessons/update-cart/' + product._id : 'http://localhost:8080/api/lessons/add-to-cart';
+      let url = cartProductIndex >= 0 ? 'https://full-stack-after-school-classes-server.onrender.com/api/lessons/update-cart/' + product._id : 'https://full-stack-after-school-classes-server.onrender.com/api/lessons/add-to-cart';
       
       fetch(url, {
         method: method,
@@ -206,7 +206,7 @@ const webStore = new Vue({
       this.showSignup = false;
     },
     removeFromCart(product) {
-      fetch('http://localhost:8080/api/lessons/' + product._id, {
+      fetch('https://full-stack-after-school-classes-server.onrender.com/api/lessons/' + product._id, {
         method: 'Delete',
       })
       .then(response => response.json())
@@ -243,7 +243,7 @@ const webStore = new Vue({
         password: this.information.password
       };
 
-      fetch('http://localhost:8080/users/login', {
+      fetch('https://full-stack-after-school-classes-server.onrender.com/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -284,7 +284,7 @@ const webStore = new Vue({
         phone: this.information.phone
       };
 
-      fetch('http://localhost:8080/users/signup', {
+      fetch('https://full-stack-after-school-classes-server.onrender.com/users/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -339,7 +339,7 @@ const webStore = new Vue({
         order: cartBeforeOrder
       }
 
-      fetch('http://localhost:8080/api/orders', {
+      fetch('https://full-stack-after-school-classes-server.onrender.com/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -359,7 +359,7 @@ const webStore = new Vue({
 
 
       for(let cartLesson of cartBeforeOrder) {
-        fetch('http://localhost:8080/api/lessons/' + cartLesson._id, {
+        fetch('https://full-stack-after-school-classes-server.onrender.com/api/lessons/' + cartLesson._id, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
