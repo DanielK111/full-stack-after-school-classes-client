@@ -259,8 +259,9 @@ const webStore = new Vue({
           let str = "";
           for(let error of errors) {
             str += error.path;
-            str += "\n" + error.msg;
+            str += "\n" + error.msg + "\n";
           }
+          alert(str)
         } else {
           alert(result.msg);
         }
@@ -304,7 +305,18 @@ const webStore = new Vue({
       })
       .then(response => response.json())
       .then(result => {
-        alert(result.msg);
+        if(result.errorArray) {
+          let errors = result.errorArray;
+          let str = "";
+          for(let error of errors) {
+            str += error.path;
+            str += "\n" + error.msg + "\n";
+          }
+          alert(str)
+        } else {
+          alert(result.msg);
+        }
+        
         if (!result.error) {
           this.showLessons = true;
           this.information.firstname = '';
