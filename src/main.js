@@ -258,7 +258,7 @@ const webStore = new Vue({
           let errors = result.errorArray;
           let str = "";
           for(let error of errors) {
-            str += error.path;
+            str += "\n" + error.path;
             str += "\n" + error.msg + "\n";
           }
           alert(str)
@@ -309,7 +309,7 @@ const webStore = new Vue({
           let errors = result.errorArray;
           let str = "";
           for(let error of errors) {
-            str += error.path;
+            str += "\n" + error.path;
             str += "\n" + error.msg + "\n";
           }
           alert(str)
