@@ -254,7 +254,17 @@ const webStore = new Vue({
       .then(response => response.json())
       .then(result => {
         console.log(result)
-        alert(result.msg);
+        if(result.errorArray) {
+          let errors = result.errorArray;
+          let str = "";
+          for(let error of errors) {
+            str += error.path;
+            str += "\n" + error.msg;
+          }
+        } else {
+          alert(result.msg);
+        }
+
         if (result.token) {
           this.isLoggedin = true;
           this.showLessons = true;
