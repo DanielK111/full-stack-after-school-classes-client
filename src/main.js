@@ -40,6 +40,7 @@ function validate() {
 const webStore = new Vue({
   el: '#app',
   data: {
+    apiBaseUrl: window.env.API_BASE_URL,
     sitename: 'After School Classes',
     showLessons: true,
     showLogin: false,
@@ -136,7 +137,7 @@ const webStore = new Vue({
   },
   methods: {
     loadLessons() {
-      fetch('https://full-stack-after-school-classes-server.onrender.com/api/lessons?search=' + this.search, {
+      fetch(`${window.env.API_BASE_URL}/api/lessons?search=` + this.search, {
         headers: {
           'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
@@ -184,7 +185,7 @@ const webStore = new Vue({
       const cartProductIndex = this.cart.findIndex(l => l._id === product._id);
       let method = cartProductIndex >= 0 ? 'PUT': 'POST';
       let payload = cartProductIndex >= 0 ? { lessonId: product._id } : { lesson: product }
-      let url = cartProductIndex >= 0 ? 'https://full-stack-after-school-classes-server.onrender.com/api/lessons/update-cart/' + product._id : 'https://full-stack-after-school-classes-server.onrender.com/api/lessons/add-to-cart';
+      let url = cartProductIndex >= 0 ? `${window.env.API_BASE_URL}/api/lessons/update-cart/` + product._id : `${window.env.API_BASE_URL}/api/lessons/add-to-cart`;
       
       fetch(url, {
         method: method,
@@ -207,7 +208,7 @@ const webStore = new Vue({
       this.showSignup = false;
     },
     removeFromCart(product) {
-      fetch('https://full-stack-after-school-classes-server.onrender.com/api/lessons/' + product._id, {
+      fetch(`${window.env.API_BASE_URL}/api/lessons/` + product._id, {
         method: 'DELETE',
       })
       .then(response => response.json())
@@ -244,7 +245,7 @@ const webStore = new Vue({
         password: this.information.password
       };
 
-      fetch('https://full-stack-after-school-classes-server.onrender.com/users/login', {
+      fetch(`${window.env.API_BASE_URL}/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -296,7 +297,7 @@ const webStore = new Vue({
         phone: this.information.phone
       };
 
-      fetch('https://full-stack-after-school-classes-server.onrender.com/users/signup', {
+      fetch(`${window.env.API_BASE_URL}/users/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -362,7 +363,7 @@ const webStore = new Vue({
         order: cartBeforeOrder
       }
 
-      fetch('https://full-stack-after-school-classes-server.onrender.com/api/orders', {
+      fetch(`${window.env.API_BASE_URL}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -382,7 +383,7 @@ const webStore = new Vue({
 
 
       for(let cartLesson of cartBeforeOrder) {
-        fetch('https://full-stack-after-school-classes-server.onrender.com/api/lessons/' + cartLesson._id, {
+        fetch(`${window.env.API_BASE_URL}/api/lessons/` + cartLesson._id, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
